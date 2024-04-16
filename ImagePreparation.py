@@ -1,5 +1,6 @@
 
 import os
+import glob
 import shutil
 from skimage.transform import resize
 from matplotlib import image as mpimg
@@ -135,7 +136,33 @@ class ImagePreparation:
                     shutil.rmtree(folder_path)
                     break
 
+    def _count_files_in_subdirectories(self,directory):
+        # Get a list of all subdirectories in directory
+        subdirectories = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        count = []
+        # For each subdirectory, count the number of files and print it
+        for subdirectory in subdirectories:
+            files = glob.glob(os.path.join(directory, subdirectory, '*'))
+            count.append((len(files),subdirectory))
+            #print(f"There are {len(files)} files in {subdirectory}")
+        return sorted(count, reverse=True)     
+               
+    def _word_length(self,list, word_length_limit):
+        count = []
+        for tuple in list:
+            if len(tuple[1]) >= word_length_limit:
+                count.append(tuple)
+        return count
 
+    def _detele_names_not_in_array(self, directory, keep_array):
+        folder_list = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        for folder in folder_list:
+            if folder not in keep_array:
+                folder_path = os.path.join(directory, folder)
+                print(f"Deleting folder: {folder_path}")
+                
+                shutil.rmtree(folder_path)
+                # break
 
 
 
@@ -154,3 +181,11 @@ class ImagePreparation:
         self._sort_files(self.directory)
         print('sorting files')
         self._delete_folders_with_additional_characters(self.directory, self.delete_array)
+
+    def remove_words_over_limit(self,amount_tokeep = 20, word_length_limit = 3, directory = None):
+        if directory is None:
+            directory = self.directory
+        count = self._count_files_in_subdirectories(directory)
+        count = self._word_length(count, word_length_limit)
+        keep_array = [x[1] for x in count[:amount_tokeep]]
+        self._detele_names_not_in_array(directory, keep_array)
