@@ -7,10 +7,11 @@ import matplotlib.pyplot as plt
 from multiprocessing import Pool
 
 class ImagePreparation:
-    def __init__(self, directory, replace=True, replace_characters="/\\|?*\":'(),.;“”„"):
+    def __init__(self, directory,source, replace=True, replace_characters="/\\|?*\":'(),.;“”„"):
         self.h_l, self.w_l = [], []
         self.directory = directory
         self.replace = replace
+        self.source = source
         self.replace_characters = replace_characters
         self.translation_table = str.maketrans("","",replace_characters)
         self.num_of_authors = 8
@@ -41,7 +42,7 @@ class ImagePreparation:
 
     def _save_words_to_files(self,author_no):
         global_counter = 0
-        file_desc_name = "author" + str(author_no + 1) + "/word_places.txt"
+        file_desc_name = self.source + str(author_no + 1) + "/word_places.txt"
         file_desc_ptr = open(file_desc_name, 'r', encoding='windows-1250')
         text = file_desc_ptr.read()
         lines = text.split('\n')
@@ -68,7 +69,7 @@ class ImagePreparation:
                 num_of_words += 1
                 number_of_values = len(row_values)
                 
-                image_file_name = "author" + str(author_no + 1) + "/" + row_values[0][1:-1]
+                image_file_name = self.source + str(author_no + 1) + "/" + row_values[0][1:-1]
 
                 if image_file_name != image_file_name_prev:   
                     image = mpimg.imread(str(image_file_name))
