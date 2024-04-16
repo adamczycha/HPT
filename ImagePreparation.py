@@ -163,8 +163,9 @@ class ImagePreparation:
             if folder not in keep_array:
                 folder_path = os.path.join(directory, folder)
                 shutil.rmtree(folder_path)
+                folder_count += 1
                 # break
-        print(f"Deleted {folder_count} folders because of length limit and lack of occurence")
+        print(f"Deleted {folder_count} folders because of length limit and lack of occurences")
 
 
 
