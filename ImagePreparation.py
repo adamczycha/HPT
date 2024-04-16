@@ -143,6 +143,7 @@ class ImagePreparation:
         
         if os.path.exists(self.directory):
             shutil.rmtree(self.directory)
+            os.mkdir(self.directory)
         pool = Pool(processes=8)
         for i in range(self.num_of_authors):
             pool.apply_async(self._save_words_to_files, args=(i,))
