@@ -183,5 +183,6 @@ class ImagePreparation:
             directory = self.directory
         count = self._count_files_in_subdirectories(directory)
         count = self._word_length(count, word_length_limit)
+        print(count[:amount_tokeep])
         keep_array = [x[1] for x in count[:amount_tokeep]]
         self._detele_names_not_in_array(directory, keep_array)
