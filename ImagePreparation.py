@@ -128,23 +128,25 @@ class ImagePreparation:
 
     def _delete_folders_with_additional_characters(self,directory, delete_array):
         folder_list = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        folder_count = 0
         for folder in folder_list:
+            
             for char in folder:
                 if char not in delete_array:
                     folder_path = os.path.join(directory, folder)
-                    print(f"Deleting folder: {folder_path} is not in:{char}")
                     shutil.rmtree(folder_path)
+                    folder_count += 1
                     break
+        print(f"Deleted {folder_count} folders because of additional characters")
+
 
     def _count_files_in_subdirectories(self,directory):
-        # Get a list of all subdirectories in directory
         subdirectories = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
         count = []
-        # For each subdirectory, count the number of files and print it
         for subdirectory in subdirectories:
             files = glob.glob(os.path.join(directory, subdirectory, '*'))
             count.append((len(files),subdirectory))
-            #print(f"There are {len(files)} files in {subdirectory}")
+
         return sorted(count, reverse=True)     
                
     def _word_length(self,list, word_length_limit):
@@ -156,30 +158,24 @@ class ImagePreparation:
 
     def _detele_names_not_in_array(self, directory, keep_array):
         folder_list = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        folder_count = 0
         for folder in folder_list:
             if folder not in keep_array:
                 folder_path = os.path.join(directory, folder)
-                print(f"Deleting folder: {folder_path}")
-                
                 shutil.rmtree(folder_path)
                 # break
+        print(f"Deleted {folder_count} folders because of length limit and lack of occurence")
 
 
 
     def prepare_images(self):
-        
         if os.path.exists(self.directory):
             shutil.rmtree(self.directory)
             os.mkdir(self.directory)
-        # pool = Pool(processes=8)
+
         for i in range(self.num_of_authors):
             self._save_words_to_files(i)
-            # pool.apply_async(self._save_words_to_files, args=(i,))
-            print("processing author ", i)
-        # pool.close()
-        # pool.join()
         self._sort_files(self.directory)
-        print('sorting files')
         self._delete_folders_with_additional_characters(self.directory, self.delete_array)
 
     def remove_words_over_limit(self,amount_tokeep = 20, word_length_limit = 3, directory = None):
