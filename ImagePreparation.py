@@ -69,7 +69,7 @@ class ImagePreparation:
                 num_of_words += 1
                 number_of_values = len(row_values)
                 
-                image_file_name = self.source + str(author_no + 1) + "/" + row_values[0][1:-1]
+                image_file_name = self.source + str(author_no + 1) + "/" + row_values[0][1:-1].replace('\\','/')
 
                 if image_file_name != image_file_name_prev:   
                     image = mpimg.imread(str(image_file_name))
