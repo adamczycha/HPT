@@ -82,7 +82,7 @@ class ModelEvaluation:
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
         plt.title('Model: '+ train_param['model_name'] +'    Batch size:  '+ str(train_param['batch_size']) + '    Number of words: ' + str(self.general_param['num_classes']))
-        plt.legend()
+        plt.legend(loc='upper left')
 
         plt.savefig(model_save_path.replace('.pt','.png'))
         plt.show()
