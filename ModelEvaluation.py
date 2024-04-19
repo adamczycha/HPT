@@ -88,9 +88,8 @@ class ModelEvaluation:
         plt.show()
 
     def _save_model(self, train_param):
-        if os.path.exists('models'):
-            shutil.rmtree('models')
-        os.mkdir('models')
+        if not os.path.exists(self.path_to_save_models):
+            os.mkdir(self.path_to_save_models)
         model_save_path = os.path.join(self.path_to_save_models, train_param['model_name'] +'_'+ str(train_param['batch_size']) +'_'+ str(self.general_param['num_classes'])+'.pt')
         torch.save({
             'model_state_dict': self.model.state_dict(),
