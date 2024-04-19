@@ -16,11 +16,12 @@ from torch.utils.data import random_split
 
 
 
-class Model_evaluation:
-    def __init__(self, general_param, weights_init_func):
+class ModelEvaluation:
+    def __init__(self, general_param, weights_init_func, path_to_save_models = 'models'):
         self.general_param = general_param
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.weights_init_func = weights_init_func
+        self.path_to_save_models = path_to_save_models
         
     def _init_model(self, train_param):
         self.model = train_param['model'](img_channel = self.general_param['img_channel'], num_classes =  self.general_param['num_classes']).to(self.device)
@@ -90,7 +91,7 @@ class Model_evaluation:
         if os.path.exists('models'):
             shutil.rmtree('models')
         os.mkdir('models')
-        model_save_path = os.path.join('models', train_param['model_name'] +'_'+ str(train_param['batch_size']) +'_'+ str(self.general_param['num_classes'])+'.pt')
+        model_save_path = os.path.join(self.path_to_save_models, train_param['model_name'] +'_'+ str(train_param['batch_size']) +'_'+ str(self.general_param['num_classes'])+'.pt')
         torch.save({
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
